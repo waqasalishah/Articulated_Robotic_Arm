@@ -1,29 +1,21 @@
+from gpiozero import AngularServo
 import time
-import RPi.GPIO as GPIO
+
+# Brown    GND
+# Orange   Power
+# Yellow   Signal
 
 
-#Define the Pin of the Servo
-Servo_pin = 12
-
-#Setting up the pin 
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-GPIO.setup(Servo_pin,GPIO.OUT)
+servo = AngularServo(6,min_angle=0, max_angle=180, min_pulse_width=0.0005,max_pulse_width=0.0025)
 
 
-#Setting the GPIO as PWM output
-Duty = GPIO.PWM(Servo_pin,50)
 
-
-def end_effector(sw):
-    Duty.start(0)
-    if sw<1:
-        sw=1
-    elif sw>6:
-        sw=6     
-    Duty.ChangeDutyCycle(sw)
-    time.sleep(0.1)
-    return sw
+def end_effector(servoAngle):
+    if servoAngle > 100 or servoAngle < 0:
+        servo.angle = 100
+    else:
+        servo.angle = servoAngle
+    return servoAngle
 
 
 
